@@ -9,8 +9,14 @@ const getCategories = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const getGameCategories = () => new Promise((resolve, reject) => {
+  fetch(`${dbURL}/gamecategories`)
+    .then((response) => resolve(response.json()))
+    .catch(reject);
+});
+
 const createGameCategory = (category) => new Promise((resolve, reject) => {
-  fetch(`${dbURL}/categories`, {
+  fetch(`${dbURL}/gamecategories`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(category),
@@ -21,7 +27,7 @@ const createGameCategory = (category) => new Promise((resolve, reject) => {
 });
 
 const updateGameCategory = (data, id) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/categories/${id}`, {
+  fetch(`${clientCredentials.databaseURL}/gamecategories/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -30,4 +36,6 @@ const updateGameCategory = (data, id) => new Promise((resolve, reject) => {
     .catch((error) => reject(error));
 });
 
-export { getCategories, createGameCategory, updateGameCategory };
+export {
+  getCategories, createGameCategory, updateGameCategory, getGameCategories,
+};

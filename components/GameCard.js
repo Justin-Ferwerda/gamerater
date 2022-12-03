@@ -3,7 +3,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GroupIcon from '@mui/icons-material/Group';
 import PropTypes from 'prop-types';
 
-export default function GameCard({ game }) {
+export default function GameCard({ game, categories }) {
   return (
     <div className="singleGameContainer">
       <Card className="gameCard">
@@ -16,6 +16,10 @@ export default function GameCard({ game }) {
           <Card.Text><GroupIcon /> {game.no_of_players} Players</Card.Text>
           <Card.Text><AccessTimeIcon /> {game.time_to_play} minutes</Card.Text>
           <Card.Text>Ages {game.age_recommendation} +</Card.Text>
+          <Card.Footer className="categories">Categories: {categories.map((category) => (
+            <div>{category.category.label}</div>
+          ))}
+          </Card.Footer>
         </Card.Body>
       </Card>
     </div>
@@ -31,4 +35,20 @@ GameCard.propTypes = {
     time_to_play: PropTypes.number,
     age_recommendation: PropTypes.number,
   }).isRequired,
+  categories: PropTypes.arrayOf(PropTypes.shape({
+    category: PropTypes.shape({
+      id: PropTypes.number,
+      label: PropTypes.string,
+    }).isRequired,
+    game: PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      description: PropTypes.string,
+      age_recommendation: PropTypes.number,
+      designer: PropTypes.string,
+      year_released: PropTypes.number,
+      no_of_players: PropTypes.number,
+      time_to_play: PropTypes.number,
+    }).isRequired,
+  })).isRequired,
 };
