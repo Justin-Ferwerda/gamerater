@@ -27,4 +27,16 @@ const createGame = (game) => new Promise((resolve, reject) => {
     .catch((error) => reject(error));
 });
 
-export { getGames, getSingleGame, createGame };
+const updateGame = (data, id) => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/games/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  })
+    .then((response) => resolve(response))
+    .catch((error) => reject(error));
+});
+
+export {
+  getGames, getSingleGame, createGame, updateGame,
+};
