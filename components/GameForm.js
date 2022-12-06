@@ -61,7 +61,7 @@ export default function GameForm({ gameObject }) {
         description: currentGame.description,
         year_released: Number(currentGame.year_released),
         designer: currentGame.designer,
-        time_to_play: currentGame.time_to_play,
+        time_to_play: Number(currentGame.time_to_play),
         age_recommendation: currentGame.age_recommendation,
       };
 
