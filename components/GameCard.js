@@ -19,6 +19,11 @@ export default function GameCard({ game, categories }) {
           <Card.Footer className="categories">Categories: {categories.map((category) => (
             <div>{category.category.label}</div>
           ))}
+            {game.average_rating ? (
+              <div className="rating">Average Rating: {game.average_rating} of 10 stars</div>
+            ) : (
+              <div />
+            )}
           </Card.Footer>
         </Card.Body>
       </Card>
@@ -34,6 +39,7 @@ GameCard.propTypes = {
     no_of_players: PropTypes.number,
     time_to_play: PropTypes.number,
     age_recommendation: PropTypes.number,
+    average_rating: PropTypes.number,
   }).isRequired,
   categories: PropTypes.arrayOf(PropTypes.shape({
     category: PropTypes.shape({

@@ -25,7 +25,6 @@ export default function ViewGame() {
 
   useEffect(() => {
     getTheGame();
-    console.warn(reviews);
   }, [id]);
 
   return (
