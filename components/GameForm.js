@@ -3,8 +3,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-import { createGameCategory, getCategories, updateGameCategory } from '../API/CategoryData';
-import { createGame, getSingleGame, updateGame } from '../API/GameData';
+import Select from 'react-select';
+import { getCategories } from '../API/CategoryData';
+import { createGame, updateGame } from '../API/GameData';
 
 export default function GameForm({ gameObject }) {
   const [categories, setCategories] = useState([]);
@@ -18,17 +19,19 @@ export default function GameForm({ gameObject }) {
     age_recommendation: null,
   });
   const router = useRouter();
-  const [currentCategory, setCurrentCategory] = useState({
-    category: null,
-    game: null,
-  });
+  const [selected, setSelected] = useState([]);
 
-  const getGameCategory = () => categories.filter((category) => category.game === gameObject?.id);
+  const categoryOptions = categories.map((category) => ({
+    value: category.id,
+    label: category.label,
+  }));
+
+  const getGameCategory = categories.filter((category) => category.game === gameObject?.id);
 
   useEffect(() => {
     getCategories().then(setCategories);
     if (gameObject?.id) setCurrentGame(gameObject);
-    if (getGameCategory().length) setCurrentCategory(getGameCategory);
+    if (getGameCategory.length) setSelected(getGameCategory);
   }, [gameObject]);
 
   const handleChange = (e) => {
@@ -39,12 +42,8 @@ export default function GameForm({ gameObject }) {
     }));
   };
 
-  const categoryHandleChange = (e) => {
-    const { name, value } = e.target;
-    setCurrentCategory((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const categoryHandleChange = (selectedOptions) => {
+    setSelected(selectedOptions.map((option) => option.value));
   };
 
   const handleSubmit = (e) => {
@@ -52,7 +51,6 @@ export default function GameForm({ gameObject }) {
     e.preventDefault();
     if (gameObject?.id) {
       updateGame(currentGame, gameObject.id)
-        .then(updateGameCategory(currentCategory, currentCategory.id))
         .then(() => router.push('/games'));
     } else {
       const game = {
@@ -62,16 +60,11 @@ export default function GameForm({ gameObject }) {
         year_released: Number(currentGame.year_released),
         designer: currentGame.designer,
         time_to_play: Number(currentGame.time_to_play),
-        age_recommendation: currentGame.age_recommendation,
+        age_recommendation: Number(currentGame.age_recommendation),
+        category_ids: selected,
       };
 
-      createGame(game).then((response) => getSingleGame(response.id)).then((response) => {
-        const gameCategory = {
-          game: response.id,
-          category: currentCategory.category,
-        };
-        createGameCategory(gameCategory).then(() => router.push('/games'));
-      });
+      createGame(game).then(() => router.push('/games'));
     }
   };
 
@@ -108,14 +101,15 @@ export default function GameForm({ gameObject }) {
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Category</Form.Label>
-          <Form.Select onChange={categoryHandleChange} className="mb-3" name="category" value={currentCategory.id} required>
-            <option value="">Select a Category</option>
-            {categories.map((category) => (
-              <option defaultValue={category.id === currentCategory.id} key={category.label} value={category.id}>
-                {category.label}
-              </option>
-            ))}
-          </Form.Select>
+          <Select
+            isMulti
+            name="categories"
+            options={categoryOptions}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            onChange={categoryHandleChange}
+            required
+          />
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit

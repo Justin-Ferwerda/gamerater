@@ -16,7 +16,7 @@ export default function GameCard({ game, categories }) {
           <Card.Text><GroupIcon /> {game.no_of_players} Players</Card.Text>
           <Card.Text><AccessTimeIcon /> {game.time_to_play} minutes</Card.Text>
           <Card.Text>Ages {game.age_recommendation} +</Card.Text>
-          <Card.Footer className="categories">Categories: {categories.map((category) => (
+          <Card.Footer className="cardFooter">Categories: {categories.map((category) => (
             <div>{category.category.label}</div>
           ))}
             {game.average_rating ? (
