@@ -25,7 +25,7 @@ export default function ViewGame() {
 
   useEffect(() => {
     getTheGame();
-  }, [id]);
+  }, [id, game.average_rating]);
 
   return (
     <>
